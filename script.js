@@ -1,44 +1,24 @@
-const portfolioContainer = document.querySelector('.container');
-portfolioContainer.addEventListener('click', e => {
-	console.log(e)
-	e.preventDefault()
+const modal = document.querySelector('.modal');
+const previews = document.querySelectorAll('.gallery img');
+const original = document.querySelector('.full-img');
+const imgText = document.querySelector('.caption');
 
-	const modalToggle = e.target.closest('.list-item')
-	//console.log(modalToggle)
+previews.forEach(preview=> {
+	preview.addEventListener('click', ()=> {
+		modal.classList.add('open');
+		original.classList.add('open');
 
-	if (! modalToggle) return 
-		// the script will end here
+		//Dynamic change text and imgText
+		const originalSrc = preview.getAttribute('data-original');
+		original.src = `./full/${originalSrc}`;
+		const altText = preview.alt;
+		imgText.textContent = altText;
+	});
+});
 
-	const modal = modalToggle.parentNode.nextElementSibling
-	const closeButton = modal.querySelector('.modal-close')
-	//console.log(modal)
-
-	const modalOpen = _ => {
-		modal.classList.add('is-open')
-		modal.style.animation = 'modalIn 500ms forwards'
-		document.body.style.overflowY = 'hidden'
-		}
-
-
-	closeButton.addEventListener('click', _ => {
-		modal.style.animation = 'modalOut 500ms forwards'
-		modal.addEventListener('animationend', modalClose)
-		document.body.style.overflowY = 'scroll'
-	})
-	
-	const modalClose = _ => {
-		modal.classList.remove('is-open')
-		modal.removeEventListener('animationend', modalClose)
-		//убирает сам себя, чтобы закрытие не зациклилось 
-	}
-
-	document.addEventListener('keydown', e => {
-		if(e.keyCode === 27) {
-		modal.style.animation = 'modalOut 500ms forwards'
-		modal.addEventListener('animationend', modalClose)
+modal.addEventListener('click', (e)=> {
+		if(e.target.classList.contains('modal')){
+			modal.classList.remove('open');
+			original.classList.remove('open');
 		}
 	})
-
-	modalOpen()
-
-})
